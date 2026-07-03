@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PitchLine — Daily Football Tips</title>
+
+<!-- ============================================================
+  SETUP — edit these three things before publishing:
+  1. FIREBASE_CONFIG below (from your Firebase project settings)
+  2. FLUTTERWAVE_PUBLIC_KEY below (from your Flutterwave dashboard)
+  3. BRAND name if you want something other than "PitchLine"
+  See SETUP-GUIDE.md for full step-by-step instructions.
+============================================================= -->
+
+<script src="https://checkout.flutterwave.com/v3.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --pitch-dark: #0b3d2e;
+    --pitch-deep: #072a20;
+    --line-white: #eef2ea;
+    --gold: #c9a227;
+    --gold-bright: #e6c14e;
+    --card: #0f4b38;
+    --card-edge: #1c6349;
+    --ink: #eef2ea;
+    --ink-dim: #9fc2b0;
+    --danger: #d84f4f;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 50% 0%, rgba(255,255,255,0.03), transparent 60%),
+      repeating-linear-gradient(0deg, var(--pitch-deep) 0 42px, #093126 42px 84px),
+      var(--pitch-dark);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+    padding-bottom:60px;
+  }
+  h1,h2,h3,.display{font-family:'Teko', sans-serif; letter-spacing:0.02em; font-weight:600;}
+  .mono{font-family:'Space Mono', monospace;}
+
+  header{
+    padding:28px 20px 20px;
+    text-align:center;
+    border-bottom:2px dashed rgba(238,242,234,0.15);
+  }
+  header .brand{
+    font-size:44px;
+    line-height:1;
+    color:var(--line-white);
+    text-transform:uppercase;
+  }
+  header .brand span{color:var(--gold-bright);}
+  header .tagline{
+    color:var(--ink-dim);
+    font-size:13px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    margin-top:4px;
+  }
+
+  main{max-width:520px; margin:0 auto; padding:24px 16px;}
+
+  .section-label{
+    display:flex; align-items:center; gap:10px;
+    font-size:12px; letter-spacing:0.18em; text-transform:uppercase;
+    color:var(--ink-dim); margin:28px 0 12px;
+  }
+  .section-label::after{content:""; flex:1; height:1px; background:rgba(238,242,234,0.15);}
+
+  /* Betting slip card */
+  .slip{
+    position:relative;
+    background:var(--card);
+    border:1px solid var(--card-edge);
+    border-radius:10px;
+    padding:16px 18px;
+    margin-bottom:14px;
+    overflow:hidden;
+  }
+  .slip::before{
+    content:"";
+    position:absolute; left:0; right:0; top:0;
+    height:4px;
+    background:repeating-linear-gradient(90deg, var(--gold) 0 8px, transparent 8px 16px);
+    opacity:0.5;
+  }
+  .slip-row{display:flex; justify-content:space-between; align-items:baseline; gap:10px;}
+  .slip-match{font-size:17px; font-weight:600; color:var(--line-white);}
+  .slip-odds{
+    font-family:'Space Mono', monospace; font-weight:700;
+    color:var(--gold-bright); font-size:16px; white-space:nowrap;
+  }
+  .slip-tip{color:var(--ink-dim); font-size:13.5px; margin-top:4px;}
+  .slip-meta{
+    display:flex; justify-content:space-between;
+    margin-top:10px; padding-top:10px;
+    border-top:1px dashed rgba(238,242,234,0.15);
+    font-size:11px; color:var(--ink-dim); letter-spacing:0.05em;
+  }
+  .tag{
+    display:inline-block; font-size:10px; letter-spacing:0.1em;
+    text-transform:uppercase; padding:2px 8px; border-radius:20px;
+    background:rgba(201,162,39,0.15); color:var(--gold-bright);
+    border:1px solid rgba(201,162,39,0.35);
+  }
+
+  .empty{
+    text-align:center; color:var(--ink-dim); font-size:13.5px;
+    padding:30px 10px; border:1px dashed rgba(238,242,234,0.15); border-radius:10px;
+  }
+
+  /* VIP locked panel */
+  .vip-locked{
+    position:relative;
+    background:linear-gradient(160deg, #17321f, #0b1f16);
+    border:1px solid rgba(201,162,39,0.35);
+    border-radius:14px;
+    padding:26px 20px 22px;
+    text-align:center;
+    overflow:hidden;
+  }
+  .vip-locked::after{
+    content:"";
+    position:absolute; inset:0;
+    background: repeating-linear-gradient(135deg, rgba(201,162,39,0.04) 0 10px, transparent 10px 20px);
+    pointer-events:none;
+  }
+  .seal{
+    width:56px; height:56px; margin:0 auto 12px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 60%, #8a6d16 100%);
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px;
+    box-shadow:0 0 0 4px rgba(201,162,39,0.15);
+  }
+  .vip-title{font-size:30px; color:var(--gold-bright); text-transform:uppercase;}
+  .vip-sub{color:var(--ink-dim); font-size:13.5px; margin-top:2px; margin-bottom:20px;}
+
+  .plans{display:flex; gap:10px;}
+  .plan-btn{
+    flex:1;
+    background:rgba(238,242,234,0.04);
+    border:1px solid rgba(201,162,39,0.4);
+    border-radius:10px;
+    padding:14px 10px;
+    cursor:pointer;
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    transition:transform 0.12s ease, background 0.12s ease;
+  }
+  .plan-btn:hover{background:rgba(201,162,39,0.12); transform:translateY(-1px);}
+  .plan-btn .p-label{font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-dim);}
+  .plan-btn .p-price{
+    font-family:'Teko', sans-serif; font-size:26px; color:var(--gold-bright);
+    margin-top:2px;
+  }
+  .plan-btn .p-unit{font-size:10px; color:var(--ink-dim);}
+
+  .vip-unlocked-banner{
+    background:rgba(201,162,39,0.12);
+    border:1px solid rgba(201,162,39,0.4);
+    border-radius:10px;
+    padding:10px 14px;
+    font-size:12.5px;
+    color:var(--gold-bright);
+    text-align:center;
+    margin-bottom:14px;
+  }
+
+  footer{
+    text-align:center; color:var(--ink-dim); font-size:11.5px;
+    margin-top:40px; letter-spacing:0.05em; padding:0 20px;
+  }
+
+  .toast{
+    position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px);
+    background:var(--gold-bright); color:#1c1503; font-weight:600;
+    padding:12px 20px; border-radius:10px; font-size:13.5px;
+    opacity:0; transition:all 0.25s ease; pointer-events:none; z-index:50;
+    max-width:88%; text-align:center;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .toast.error{background:var(--danger); color:#fff;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Pitch<span>Line</span></div>
+  <div class="tagline">Straight tips. No noise.</div>
+</header>
+
+<main>
+
+  <div class="section-label">Today's free tips</div>
+  <div id="freeList"><div class="empty">No free tips posted yet — check back soon.</div></div>
+
+  <div class="section-label">VIP</div>
+  <div id="vipArea"></div>
+
+</main>
+
+<footer>
+  Betting involves risk. Only stake what you can afford to lose. 18+
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= CONFIG — EDIT THESE ================= */
+// Your Apps Script Web App URL (ends in /exec) — see SETUP-GUIDE.md
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJ5hojeie_vH1mwABGF871SJ1F1M3tiNSDZHxjIexSucAyeFTEqJ7IvVLrjZRC7vWh4Q/exec";
+const FLUTTERWAVE_PUBLIC_KEY = "FLWPUBK_TEST-09cfb49548d161b75cc479ed14922f1b-X";
+/* ========================================================== */
+
+// Each browser gets a stable anonymous device id, used to track VIP access.
+function getDeviceId(){
+  let id = localStorage.getItem('pl_device_id');
+  if(!id){
+    id = 'dev_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+    localStorage.setItem('pl_device_id', id);
+  }
+  return id;
+}
+const deviceId = getDeviceId();
+
+function showToast(msg, isError){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(()=> t.className = 'toast', 3200);
+}
+
+function fmtOdds(o){ return Number(o).toFixed(2); }
+
+function renderFree(docs){
+  const el = document.getElementById('freeList');
+  if(!docs.length){ el.innerHTML = '<div class="empty">No free tips posted yet — check back soon.</div>'; return; }
+  el.innerHTML = docs.map(d => `
+    <div class="slip">
+      <div class="slip-row">
+        <div class="slip-match">${escapeHtml(d.match)}</div>
+        <div class="slip-odds">${fmtOdds(d.odds)}</div>
+      </div>
+      <div class="slip-tip">${escapeHtml(d.tip)}</div>
+      <div class="slip-meta"><span>${escapeHtml(d.league||'')}</span><span class="tag">Free</span></div>
+    </div>
+  `).join('');
+}
+
+function renderVipLocked(){
+  document.getElementById('vipArea').innerHTML = `
+    <div class="vip-locked">
+      <div class="seal">🔒</div>
+      <div class="vip-title">VIP Tips</div>
+      <div class="vip-sub">Higher-confidence picks, unlocked instantly on payment.</div>
+      <div class="plans">
+        <button class="plan-btn" onclick="payVip('daily')">
+          <div class="p-label">Day Pass</div>
+          <div class="p-price">5,000</div>
+          <div class="p-unit">UGX / day</div>
+        </button>
+        <button class="plan-btn" onclick="payVip('weekly')">
+          <div class="p-label">Week Pass</div>
+          <div class="p-price">20,000</div>
+          <div class="p-unit">UGX / week</div>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function renderVipUnlocked(docs, expiresAt){
+  const el = document.getElementById('vipArea');
+  const left = timeLeftStr(expiresAt);
+  let html = `<div class="vip-unlocked-banner">VIP active — ${left} remaining</div>`;
+  if(!docs.length){
+    html += '<div class="empty">No VIP tips posted yet — check back soon.</div>';
+  } else {
+    html += docs.map(d => `
+      <div class="slip">
+        <div class="slip-row">
+          <div class="slip-match">${escapeHtml(d.match)}</div>
+          <div class="slip-odds">${fmtOdds(d.odds)}</div>
+        </div>
+        <div class="slip-tip">${escapeHtml(d.tip)}</div>
+        <div class="slip-meta"><span>${escapeHtml(d.league||'')}</span><span class="tag">VIP</span></div>
+      </div>
+    `).join('');
+  }
+  el.innerHTML = html;
+}
+
+function timeLeftStr(expiresAtMs){
+  const ms = expiresAtMs - Date.now();
+  if(ms <= 0) return 'expired';
+  const hrs = Math.floor(ms / 3600000);
+  if(hrs >= 24){
+    const days = Math.floor(hrs/24);
+    return days + (days===1 ? ' day' : ' days');
+  }
+  return hrs + (hrs===1 ? ' hour' : ' hours');
+}
+
+function escapeHtml(s){
+  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// Load free tips
+function loadFreeTips(){
+  fetch(`${APPS_SCRIPT_URL}?action=list_predictions&type=free`)
+    .then(r => r.json())
+    .then(renderFree)
+    .catch(err => {
+      console.error(err);
+      document.getElementById('freeList').innerHTML = '<div class="empty">Could not load tips right now.</div>';
+    });
+}
+loadFreeTips();
+
+// Check VIP status, then load VIP tips if active
+function checkVipStatus(){
+  fetch(`${APPS_SCRIPT_URL}?action=check_vip&deviceId=${encodeURIComponent(deviceId)}`)
+    .then(r => r.json())
+    .then(status => {
+      if(status.active){
+        fetch(`${APPS_SCRIPT_URL}?action=list_predictions&type=vip`)
+          .then(r => r.json())
+          .then(docs => renderVipUnlocked(docs, status.expiresAt));
+      } else {
+        renderVipLocked();
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      renderVipLocked();
+    });
+}
+checkVipStatus();
+
+function payVip(plan){
+  const amount = plan === 'weekly' ? 20000 : 5000;
+  const durationMs = plan === 'weekly' ? 7*24*3600*1000 : 24*3600*1000;
+  const txRef = 'plvip_' + deviceId + '_' + Date.now();
+
+  FlutterwaveCheckout({
+    public_key: FLUTTERWAVE_PUBLIC_KEY,
+    tx_ref: txRef,
+    amount: amount,
+    currency: "UGX",
+    payment_options: "mobilemoneyuganda,card",
+    customer: {
+      email: "guest+" + deviceId + "@pitchline.app",
+      name: "PitchLine VIP"
+    },
+    customizations: {
+      title: "PitchLine VIP",
+      description: plan === 'weekly' ? "1 Week VIP Access" : "1 Day VIP Access",
+    },
+    callback: function(response){
+      if(response.status === "successful" || response.status === "completed"){
+        const expiresAt = Date.now() + durationMs;
+        fetch(APPS_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // avoids CORS preflight on Apps Script
+          body: JSON.stringify({
+            action: 'unlock_vip',
+            deviceId: deviceId,
+            expiresAt: expiresAt,
+            plan: plan,
+            txRef: txRef
+          })
+        }).then(r => r.json())
+          .then(res => {
+            if(res.success){
+              showToast('VIP unlocked! Enjoy your tips.');
+              checkVipStatus();
+            } else {
+              showToast('Payment went through but unlocking failed — contact support.', true);
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            showToast('Payment went through but unlocking failed — contact support.', true);
+          });
+      } else {
+        showToast('Payment was not completed.', true);
+      }
+    },
+    onclose: function(){}
+  });
+}
+</script>
+
+</body>
+</html>
