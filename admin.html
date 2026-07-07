@@ -27,7 +27,6 @@
 
   main{max-width:560px; margin:0 auto; padding:20px 16px;}
 
-  /* Login */
   .login-box{
     max-width:340px; margin:60px auto; background:var(--card);
     border:1px solid var(--card-edge); border-radius:12px; padding:26px 22px;
@@ -40,26 +39,27 @@
   }
   input:focus, select:focus, textarea:focus{outline:2px solid var(--gold); outline-offset:1px;}
   textarea{resize:vertical; min-height:56px;}
-  button{
-    cursor:pointer; border:none; border-radius:8px; font-family:'Inter',sans-serif; font-weight:600;
-  }
-  .btn-primary{
-    width:100%; background:var(--gold-bright); color:#1c1503; padding:12px; font-size:14.5px; margin-top:18px;
-  }
+  button{cursor:pointer; border:none; border-radius:8px; font-family:'Inter',sans-serif; font-weight:600;}
+  .btn-primary{width:100%; background:var(--gold-bright); color:#1c1503; padding:12px; font-size:14.5px; margin-top:18px;}
   .btn-primary:hover{background:var(--gold);}
   .err{color:var(--danger); font-size:12.5px; margin-top:10px; min-height:16px;}
 
-  /* Top bar once logged in */
   .topbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
   .signout{background:none; color:var(--ink-dim); font-size:12px; text-decoration:underline;}
 
   .stat-row{display:flex; gap:10px; margin:16px 0 24px;}
-  .stat{
-    flex:1; background:var(--card); border:1px solid var(--card-edge); border-radius:10px;
-    padding:14px; text-align:center;
-  }
+  .stat{flex:1; background:var(--card); border:1px solid var(--card-edge); border-radius:10px; padding:14px; text-align:center;}
   .stat .n{font-family:'Teko',sans-serif; font-size:30px; color:var(--gold-bright);}
   .stat .l{font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-dim);}
+
+  .tabs{display:flex; gap:8px; margin:20px 0 4px;}
+  .tab-btn{
+    flex:1; background:rgba(238,242,234,0.04); border:1px solid var(--card-edge);
+    border-radius:8px; padding:10px; font-size:12.5px; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.05em;
+  }
+  .tab-btn.active{background:rgba(201,162,39,0.15); color:var(--gold-bright); border-color:rgba(201,162,39,0.4);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
 
   .section-label{
     display:flex; align-items:center; gap:10px; font-size:12px; letter-spacing:0.18em;
@@ -71,42 +71,28 @@
   .row2{display:flex; gap:10px;}
   .row2 > div{flex:1;}
 
-  .leg-row{
-    display:flex; gap:8px; margin-bottom:8px; align-items:center;
-  }
+  .leg-row{display:flex; gap:8px; margin-bottom:8px; align-items:center;}
   .leg-row input{flex:1;}
-  .leg-row .leg-num{
-    font-family:'Space Mono',monospace; color:var(--ink-dim); font-size:12px; width:16px; flex:none;
-  }
-  .leg-row .leg-remove{
-    flex:none; background:var(--danger-bg); color:var(--danger); border:1px solid rgba(216,79,79,0.3);
-    border-radius:6px; padding:8px 10px; font-size:12px;
-  }
-  .add-leg-btn{
-    width:100%; background:rgba(238,242,234,0.06); color:var(--ink);
-    border:1px dashed rgba(238,242,234,0.25); border-radius:8px; padding:10px; font-size:13px; margin-top:2px;
-  }
+  .leg-row .leg-num{font-family:'Space Mono',monospace; color:var(--ink-dim); font-size:12px; width:16px; flex:none;}
+  .leg-row .leg-remove{flex:none; background:var(--danger-bg); color:var(--danger); border:1px solid rgba(216,79,79,0.3); border-radius:6px; padding:8px 10px; font-size:12px;}
+  .add-leg-btn{width:100%; background:rgba(238,242,234,0.06); color:var(--ink); border:1px dashed rgba(238,242,234,0.25); border-radius:8px; padding:10px; font-size:13px; margin-top:2px;}
 
-  .slip{
-    position:relative; background:var(--card); border:1px solid var(--card-edge);
-    border-radius:10px; padding:14px 16px; margin-bottom:10px;
-  }
+  .slip{position:relative; background:var(--card); border:1px solid var(--card-edge); border-radius:10px; padding:14px 16px; margin-bottom:10px;}
   .slip-row{display:flex; justify-content:space-between; align-items:baseline; gap:10px;}
   .slip-match{font-size:16px; font-weight:600; color:var(--line-white);}
   .slip-odds{font-family:'Space Mono',monospace; font-weight:700; color:var(--gold-bright);}
   .slip-tip{color:var(--ink-dim); font-size:13px; margin-top:4px;}
   .slip-actions{display:flex; gap:8px; margin-top:10px;}
-  .slip-actions button{
-    flex:1; padding:8px; font-size:12px; background:rgba(238,242,234,0.06); color:var(--ink);
-    border:1px solid rgba(238,242,234,0.15); border-radius:6px;
-  }
+  .slip-actions button{flex:1; padding:8px; font-size:12px; background:rgba(238,242,234,0.06); color:var(--ink); border:1px solid rgba(238,242,234,0.15); border-radius:6px;}
   .slip-actions .del{background:var(--danger-bg); color:var(--danger); border-color:rgba(216,79,79,0.3);}
-  .tag{
-    display:inline-block; font-size:10px; letter-spacing:0.1em; text-transform:uppercase;
-    padding:2px 8px; border-radius:20px; background:rgba(201,162,39,0.15);
-    color:var(--gold-bright); border:1px solid rgba(201,162,39,0.35);
-  }
+  .tag{display:inline-block; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; padding:2px 8px; border-radius:20px; background:rgba(201,162,39,0.15); color:var(--gold-bright); border:1px solid rgba(201,162,39,0.35);}
+  .tag.off{background:rgba(238,242,234,0.06); color:var(--ink-dim); border-color:rgba(238,242,234,0.15);}
   .empty{text-align:center; color:var(--ink-dim); font-size:13px; padding:20px; border:1px dashed rgba(238,242,234,0.15); border-radius:10px;}
+
+  .ad-img-preview{width:44px; height:44px; border-radius:8px; object-fit:cover; background:rgba(255,255,255,0.06); flex:none;}
+  .checkbox-row{display:flex; align-items:center; gap:8px; margin-top:14px;}
+  .checkbox-row input{width:auto;}
+  .checkbox-row label{margin:0; text-transform:none; letter-spacing:0; font-size:13.5px; color:var(--ink);}
 
   .toast{
     position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px);
@@ -140,7 +126,7 @@
 
   <div id="appArea">
     <div class="topbar">
-      <span id="whoami" style="color:var(--ink-dim); font-size:12.5px;">Signed in</span>
+      <span style="color:var(--ink-dim); font-size:12.5px;">Signed in</span>
       <button class="signout" onclick="doLogout()">Sign out</button>
     </div>
 
@@ -150,57 +136,86 @@
       <div class="stat"><div class="n" id="statActive">0</div><div class="l">Active VIP users</div></div>
     </div>
 
-    <div class="section-label">Add a tip</div>
-    <div class="form-card">
-      <label>Bet type</label>
-      <select id="f_bettype" onchange="onBetTypeChange()">
-        <option value="single">Single match</option>
-        <option value="multi">Multi / Accumulator</option>
-      </select>
-
-      <div id="singleFields">
-        <label>Match</label>
-        <input type="text" id="f_match" placeholder="e.g. Arsenal vs Chelsea">
-        <label>League (optional)</label>
-        <input type="text" id="f_league" placeholder="e.g. EPL">
-      </div>
-
-      <div id="multiFields" style="display:none;">
-        <label>Matches in this slip</label>
-        <div id="legsList"></div>
-        <button type="button" class="add-leg-btn" onclick="addLegRow()">+ Add match</button>
-      </div>
-
-      <div class="row2">
-        <div>
-          <label>Date</label>
-          <input type="date" id="f_date">
-        </div>
-        <div>
-          <label id="oddsLabel">Odds</label>
-          <input type="number" step="0.01" id="f_odds" placeholder="e.g. 1.35">
-        </div>
-      </div>
-
-      <div id="tipFieldWrap">
-        <label>Tip / note</label>
-        <textarea id="f_tip" placeholder="e.g. Over 1.5 goals"></textarea>
-      </div>
-
-      <label>Visibility</label>
-      <select id="f_type">
-        <option value="free">Free</option>
-        <option value="vip">VIP</option>
-      </select>
-      <button class="btn-primary" onclick="addTip()">Post tip</button>
-      <div class="err" id="addErr"></div>
+    <div class="tabs">
+      <button class="tab-btn active" id="tabBtnTips" onclick="switchTab('tips')">Tips</button>
+      <button class="tab-btn" id="tabBtnAds" onclick="switchTab('ads')">Sponsor Ads</button>
     </div>
 
-    <div class="section-label">Free tips</div>
-    <div id="freeList"><div class="empty">Nothing here yet.</div></div>
+    <!-- ================= TIPS TAB ================= -->
+    <div class="tab-panel active" id="panelTips">
 
-    <div class="section-label">VIP tips</div>
-    <div id="vipList"><div class="empty">Nothing here yet.</div></div>
+      <div class="section-label">Add a tip</div>
+      <div class="form-card">
+        <label>Bet type</label>
+        <select id="f_bettype" onchange="onBetTypeChange()">
+          <option value="single">Single match</option>
+          <option value="multi">Multi / Accumulator</option>
+        </select>
+
+        <div id="singleFields">
+          <label>Match</label>
+          <input type="text" id="f_match" placeholder="e.g. Arsenal vs Chelsea">
+          <label>League (optional)</label>
+          <input type="text" id="f_league" placeholder="e.g. EPL">
+        </div>
+
+        <div id="multiFields" style="display:none;">
+          <label>Matches in this slip</label>
+          <div id="legsList"></div>
+          <button type="button" class="add-leg-btn" onclick="addLegRow()">+ Add match</button>
+        </div>
+
+        <div class="row2">
+          <div><label>Date</label><input type="date" id="f_date"></div>
+          <div><label id="oddsLabel">Odds</label><input type="number" step="0.01" id="f_odds" placeholder="e.g. 1.35"></div>
+        </div>
+
+        <div id="tipFieldWrap">
+          <label>Tip / note</label>
+          <textarea id="f_tip" placeholder="e.g. Over 1.5 goals"></textarea>
+        </div>
+
+        <label>Visibility</label>
+        <select id="f_type">
+          <option value="free">Free</option>
+          <option value="vip">VIP</option>
+        </select>
+        <button class="btn-primary" onclick="addTip()">Post tip</button>
+        <div class="err" id="addErr"></div>
+      </div>
+
+      <div class="section-label">Free tips</div>
+      <div id="freeList"><div class="empty">Nothing here yet.</div></div>
+
+      <div class="section-label">VIP tips</div>
+      <div id="vipList"><div class="empty">Nothing here yet.</div></div>
+    </div>
+
+    <!-- ================= ADS TAB ================= -->
+    <div class="tab-panel" id="panelAds">
+
+      <div class="section-label">Add a sponsor ad</div>
+      <div class="form-card">
+        <label>Sponsor / company name</label>
+        <input type="text" id="a_sponsor" placeholder="e.g. BetCompany Uganda">
+        <label>Message</label>
+        <textarea id="a_message" placeholder="e.g. Get a 100% deposit bonus this week"></textarea>
+        <label>Link (optional)</label>
+        <input type="text" id="a_link" placeholder="https://...">
+        <label>Image URL (optional)</label>
+        <input type="text" id="a_image" placeholder="https://... (a small logo/banner image)">
+        <div class="checkbox-row">
+          <input type="checkbox" id="a_active" checked>
+          <label for="a_active">Show this ad on the site right away</label>
+        </div>
+        <button class="btn-primary" onclick="addAd()">Post ad</button>
+        <div class="err" id="adErr"></div>
+      </div>
+
+      <div class="section-label">Your ads</div>
+      <div id="adsList"><div class="empty">No ads yet.</div></div>
+    </div>
+
   </div>
 
 </main>
@@ -209,11 +224,8 @@
 
 <script>
 /* ================= CONFIG — EDIT THESE ================= */
-// Your Apps Script Web App URL (ends in /exec) — see SETUP-GUIDE.md
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJ5hojeie_vH1mwABGF871SJ1F1M3tiNSDZHxjIexSucAyeFTEqJ7IvVLrjZRC7vWh4Q/exec";
-// This page's login password — pick your own.
 const ADMIN_PASSWORD = "samsam32";
-// Must exactly match ADMIN_KEY inside your Apps Script code (AppsScript-Code.gs).
 const ADMIN_KEY = "s1-a2-m3";
 /* ========================================================== */
 
@@ -226,14 +238,19 @@ function showToast(msg, isError){
 function escapeHtml(s){
   return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+function post(payload){
+  return fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // avoids CORS preflight on Apps Script
+    body: JSON.stringify(payload)
+  }).then(r => r.json());
+}
 
+/* -------- auth -------- */
 function doLogin(){
   const pass = document.getElementById('password').value;
   const errEl = document.getElementById('loginErr');
-  if(pass !== ADMIN_PASSWORD){
-    errEl.textContent = 'Wrong password.';
-    return;
-  }
+  if(pass !== ADMIN_PASSWORD){ errEl.textContent = 'Wrong password.'; return; }
   errEl.textContent = '';
   sessionStorage.setItem('pl_admin_in', '1');
   showApp();
@@ -248,40 +265,43 @@ function showApp(){
   document.getElementById('appArea').style.display = 'block';
   loadAll();
 }
-// Stay signed in for this browser tab/session
 if(sessionStorage.getItem('pl_admin_in') === '1'){ showApp(); }
 
+/* -------- tabs -------- */
+function switchTab(tab){
+  document.getElementById('tabBtnTips').classList.toggle('active', tab==='tips');
+  document.getElementById('tabBtnAds').classList.toggle('active', tab==='ads');
+  document.getElementById('panelTips').classList.toggle('active', tab==='tips');
+  document.getElementById('panelAds').classList.toggle('active', tab==='ads');
+}
+
+/* -------- load everything -------- */
 function loadAll(){
   fetch(`${APPS_SCRIPT_URL}?action=list_predictions&type=free`)
     .then(r => r.json())
-    .then(docs => {
-      document.getElementById('statFree').textContent = docs.length;
-      renderList('freeList', docs);
-    });
+    .then(docs => { document.getElementById('statFree').textContent = docs.length; renderTipList('freeList', docs); });
 
   fetch(`${APPS_SCRIPT_URL}?action=list_predictions&type=vip`)
     .then(r => r.json())
-    .then(docs => {
-      document.getElementById('statVip').textContent = docs.length;
-      renderList('vipList', docs);
-    });
+    .then(docs => { document.getElementById('statVip').textContent = docs.length; renderTipList('vipList', docs); });
 
   fetch(`${APPS_SCRIPT_URL}?action=count_active_vip`)
     .then(r => r.json())
-    .then(res => {
-      document.getElementById('statActive').textContent = res.count || 0;
-    });
+    .then(res => { document.getElementById('statActive').textContent = res.count || 0; });
+
+  fetch(`${APPS_SCRIPT_URL}?action=list_ads`)
+    .then(r => r.json())
+    .then(renderAdsList);
 }
 
-function renderList(elId, docs){
+/* -------- tips: render -------- */
+function renderTipList(elId, docs){
   const el = document.getElementById(elId);
   if(!docs.length){ el.innerHTML = '<div class="empty">Nothing here yet.</div>'; return; }
   el.innerHTML = docs.map(d => {
     const isMulti = d.betType === 'multi';
     let legs = [];
-    if(isMulti && d.legs){
-      try{ legs = JSON.parse(d.legs); }catch(e){ legs = []; }
-    }
+    if(isMulti && d.legs){ try{ legs = JSON.parse(d.legs); }catch(e){ legs = []; } }
     const legsHtml = isMulti
       ? legs.map((l,i) => `<div class="slip-tip">${i+1}. ${escapeHtml(l.match)} — ${escapeHtml(l.pick)}</div>`).join('')
       : `<div class="slip-tip">${escapeHtml(d.tip)}</div>`;
@@ -301,26 +321,22 @@ function renderList(elId, docs){
       <div class="slip-actions">
         <button onclick="removeTip('${d.id}')" class="del">Delete</button>
       </div>
-    </div>
-  `;
+    </div>`;
   }).join('');
 }
 
-let legCount = 0;
+/* -------- tips: form -------- */
 function onBetTypeChange(){
-  const type = document.getElementById('f_bettype').value;
-  const isMulti = type === 'multi';
+  const isMulti = document.getElementById('f_bettype').value === 'multi';
   document.getElementById('singleFields').style.display = isMulti ? 'none' : 'block';
   document.getElementById('multiFields').style.display = isMulti ? 'block' : 'none';
   document.getElementById('oddsLabel').textContent = isMulti ? 'Combined odds' : 'Odds';
-  document.getElementById('tipFieldWrap').style.display = isMulti ? 'block' : 'block';
   document.querySelector('#tipFieldWrap label').textContent = isMulti ? 'Extra note (optional)' : 'Tip / note';
   if(isMulti && document.getElementById('legsList').children.length === 0){
     addLegRow(); addLegRow();
   }
 }
 function addLegRow(){
-  legCount++;
   const wrap = document.getElementById('legsList');
   const row = document.createElement('div');
   row.className = 'leg-row';
@@ -368,11 +384,7 @@ function addTip(){
   }
   errEl.textContent = '';
 
-  fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // avoids CORS preflight on Apps Script
-    body: JSON.stringify({ action: 'add_prediction', adminKey: ADMIN_KEY, match, league, odds, tip, type, date, betType, legs })
-  }).then(r => r.json())
+  post({ action: 'add_prediction', adminKey: ADMIN_KEY, match, league, odds, tip, type, date, betType, legs })
     .then(res => {
       if(res.success){
         document.getElementById('f_match').value = '';
@@ -393,16 +405,84 @@ function addTip(){
 
 function removeTip(id){
   if(!confirm('Delete this tip?')) return;
-  fetch(APPS_SCRIPT_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ action: 'delete_prediction', adminKey: ADMIN_KEY, id })
-  }).then(r => r.json())
+  post({ action: 'delete_prediction', adminKey: ADMIN_KEY, id })
     .then(res => {
       if(res.success){ showToast('Tip deleted.'); loadAll(); }
       else { showToast('Could not delete tip.', true); }
     })
     .catch(err => { console.error(err); showToast('Could not delete tip.', true); });
+}
+
+/* -------- ads -------- */
+function renderAdsList(ads){
+  const el = document.getElementById('adsList');
+  if(!ads.length){ el.innerHTML = '<div class="empty">No ads yet.</div>'; return; }
+  el.innerHTML = ads.map(a => {
+    const isActive = String(a.active).toUpperCase() === 'TRUE';
+    return `
+    <div class="slip">
+      <div class="slip-row">
+        <div class="slip-match">${escapeHtml(a.sponsor)}</div>
+        <span class="tag ${isActive ? '' : 'off'}">${isActive ? 'Live' : 'Off'}</span>
+      </div>
+      <div class="slip-tip">${escapeHtml(a.message)}</div>
+      ${a.link ? `<div class="slip-tip">${escapeHtml(a.link)}</div>` : ''}
+      <div class="slip-actions">
+        <button onclick="toggleAd('${a.id}', ${!isActive})">${isActive ? 'Turn off' : 'Turn on'}</button>
+        <button onclick="removeAd('${a.id}')" class="del">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function addAd(){
+  const sponsor = document.getElementById('a_sponsor').value.trim();
+  const message = document.getElementById('a_message').value.trim();
+  const link = document.getElementById('a_link').value.trim();
+  const imageUrl = document.getElementById('a_image').value.trim();
+  const active = document.getElementById('a_active').checked;
+  const errEl = document.getElementById('adErr');
+
+  if(!sponsor || !message){
+    errEl.textContent = 'Please fill in sponsor name and message.';
+    return;
+  }
+  errEl.textContent = '';
+
+  post({ action: 'add_ad', adminKey: ADMIN_KEY, sponsor, message, link, imageUrl, active })
+    .then(res => {
+      if(res.success){
+        document.getElementById('a_sponsor').value = '';
+        document.getElementById('a_message').value = '';
+        document.getElementById('a_link').value = '';
+        document.getElementById('a_image').value = '';
+        document.getElementById('a_active').checked = true;
+        showToast('Ad posted.');
+        loadAll();
+      } else {
+        showToast(res.error === 'unauthorized' ? 'Admin key mismatch — check config.' : 'Could not post ad.', true);
+      }
+    })
+    .catch(err => { console.error(err); showToast('Could not post ad.', true); });
+}
+
+function toggleAd(id, newActive){
+  post({ action: 'toggle_ad', adminKey: ADMIN_KEY, id, active: newActive })
+    .then(res => {
+      if(res.success){ showToast(newActive ? 'Ad turned on.' : 'Ad turned off.'); loadAll(); }
+      else { showToast('Could not update ad.', true); }
+    })
+    .catch(err => { console.error(err); showToast('Could not update ad.', true); });
+}
+
+function removeAd(id){
+  if(!confirm('Delete this ad?')) return;
+  post({ action: 'delete_ad', adminKey: ADMIN_KEY, id })
+    .then(res => {
+      if(res.success){ showToast('Ad deleted.'); loadAll(); }
+      else { showToast('Could not delete ad.', true); }
+    })
+    .catch(err => { console.error(err); showToast('Could not delete ad.', true); });
 }
 </script>
 
