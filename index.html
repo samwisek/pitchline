@@ -41,6 +41,27 @@
     font-family:'Inter', sans-serif;
     min-height:100vh;
     padding-bottom:60px;
+    animation: bodyFadeIn 0.5s ease both;
+  }
+  @keyframes bodyFadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
+  }
+  @keyframes slipIn{
+    from{opacity:0; transform:translateY(14px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  @keyframes softPulse{
+    0%, 100%{ box-shadow:0 0 0 4px rgba(201,162,39,0.15); }
+    50%{ box-shadow:0 0 0 9px rgba(201,162,39,0.08); }
+  }
+  @keyframes ballRoll{
+    from{ transform:rotate(0deg); }
+    to{ transform:rotate(360deg); }
+  }
+  @keyframes shimmer{
+    0%{ background-position:-120px 0; }
+    100%{ background-position:120px 0; }
   }
   h1,h2,h3,.display{font-family:'Teko', sans-serif; letter-spacing:0.02em; font-weight:600;}
   .mono{font-family:'Space Mono', monospace;}
@@ -49,12 +70,30 @@
     padding:28px 20px 20px;
     text-align:center;
     border-bottom:2px dashed rgba(238,242,234,0.15);
+    position:relative;
+    overflow:hidden;
+  }
+  header::before{
+    content:"";
+    position:absolute; top:-70px; left:50%; transform:translateX(-50%);
+    width:220px; height:220px; border:2px solid rgba(238,242,234,0.06);
+    border-radius:50%;
+  }
+  .brand-row{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    position:relative; z-index:1;
+  }
+  .ball-icon{
+    width:30px; height:30px; flex:none;
+    animation: ballRoll 6s linear infinite;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
   }
   header .brand{
     font-size:44px;
     line-height:1;
     color:var(--line-white);
     text-transform:uppercase;
+    position:relative; z-index:1;
   }
   header .brand span{color:var(--gold-bright);}
   header .tagline{
@@ -83,6 +122,12 @@
     padding:16px 18px;
     margin-bottom:14px;
     overflow:hidden;
+    animation: slipIn 0.4s ease both;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .slip:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 18px rgba(0,0,0,0.25);
   }
   .slip::before{
     content:"";
@@ -125,6 +170,7 @@
     padding:26px 20px 22px;
     text-align:center;
     overflow:hidden;
+    animation: slipIn 0.45s ease both;
   }
   .vip-locked::after{
     content:"";
@@ -138,7 +184,7 @@
     background:radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 60%, #8a6d16 100%);
     display:flex; align-items:center; justify-content:center;
     font-size:26px;
-    box-shadow:0 0 0 4px rgba(201,162,39,0.15);
+    animation: softPulse 2.6s ease-in-out infinite;
   }
   .vip-title{font-size:30px; color:var(--gold-bright); text-transform:uppercase;}
   .vip-sub{color:var(--ink-dim); font-size:13.5px; margin-top:2px; margin-bottom:20px;}
@@ -156,6 +202,7 @@
     transition:transform 0.12s ease, background 0.12s ease;
   }
   .plan-btn:hover{background:rgba(201,162,39,0.12); transform:translateY(-1px);}
+  .plan-btn:active{transform:translateY(0) scale(0.97);}
   .plan-btn .p-label{font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-dim);}
   .plan-btn .p-price{
     font-family:'Teko', sans-serif; font-size:26px; color:var(--gold-bright);
@@ -172,6 +219,7 @@
     color:var(--gold-bright);
     text-align:center;
     margin-bottom:14px;
+    animation: slipIn 0.4s ease both;
   }
 
   footer{
@@ -197,7 +245,14 @@
 <body>
 
 <header>
-  <div class="brand">Pitch<span>Line</span></div>
+  <div class="brand-row">
+    <svg class="ball-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="46" fill="#eef2ea" stroke="#0b3d2e" stroke-width="3"/>
+      <polygon points="50,28 68,41 61,62 39,62 32,41" fill="#0b3d2e"/>
+      <path d="M50 28 L50 6 M68 41 L88 34 M61 62 L74 82 M39 62 L26 82 M32 41 L12 34" stroke="#0b3d2e" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg>
+    <div class="brand">Pitch<span>Line</span></div>
+  </div>
   <div class="tagline">Straight tips. No noise.</div>
 </header>
 
@@ -244,19 +299,46 @@ function showToast(msg, isError){
 
 function fmtOdds(o){ return Number(o).toFixed(2); }
 
+function fmtDate(d){
+  if(!d) return '';
+  const parts = String(d).split('-');
+  if(parts.length !== 3) return d;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${parts[2]} ${months[parseInt(parts[1],10)-1]}`;
+}
+
+function slipCard(d, tagLabel, index){
+  const isMulti = d.betType === 'multi';
+  let legs = [];
+  if(isMulti && d.legs){
+    try{ legs = JSON.parse(d.legs); }catch(e){ legs = []; }
+  }
+  const title = isMulti ? `${legs.length}-Fold Accumulator` : escapeHtml(d.match);
+  const body = isMulti
+    ? legs.map((l,i) => `<div class="slip-tip">${i+1}. ${escapeHtml(l.match)} — <strong style="color:var(--line-white);">${escapeHtml(l.pick)}</strong></div>`).join('')
+      + (d.tip ? `<div class="slip-tip" style="margin-top:6px;">${escapeHtml(d.tip)}</div>` : '')
+    : `<div class="slip-tip">${escapeHtml(d.tip)}</div>`;
+  const delay = Math.min((index||0) * 70, 500);
+
+  return `
+    <div class="slip" style="animation-delay:${delay}ms;">
+      <div class="slip-row">
+        <div class="slip-match">${title}</div>
+        <div class="slip-odds">${fmtOdds(d.odds)}</div>
+      </div>
+      ${body}
+      <div class="slip-meta">
+        <span>${[escapeHtml(d.league||''), fmtDate(d.date)].filter(Boolean).join(' · ')}</span>
+        <span class="tag">${tagLabel}</span>
+      </div>
+    </div>
+  `;
+}
+
 function renderFree(docs){
   const el = document.getElementById('freeList');
   if(!docs.length){ el.innerHTML = '<div class="empty">No free tips posted yet — check back soon.</div>'; return; }
-  el.innerHTML = docs.map(d => `
-    <div class="slip">
-      <div class="slip-row">
-        <div class="slip-match">${escapeHtml(d.match)}</div>
-        <div class="slip-odds">${fmtOdds(d.odds)}</div>
-      </div>
-      <div class="slip-tip">${escapeHtml(d.tip)}</div>
-      <div class="slip-meta"><span>${escapeHtml(d.league||'')}</span><span class="tag">Free</span></div>
-    </div>
-  `).join('');
+  el.innerHTML = docs.map((d,i) => slipCard(d, 'Free', i)).join('');
 }
 
 function renderVipLocked(){
@@ -288,16 +370,7 @@ function renderVipUnlocked(docs, expiresAt){
   if(!docs.length){
     html += '<div class="empty">No VIP tips posted yet — check back soon.</div>';
   } else {
-    html += docs.map(d => `
-      <div class="slip">
-        <div class="slip-row">
-          <div class="slip-match">${escapeHtml(d.match)}</div>
-          <div class="slip-odds">${fmtOdds(d.odds)}</div>
-        </div>
-        <div class="slip-tip">${escapeHtml(d.tip)}</div>
-        <div class="slip-meta"><span>${escapeHtml(d.league||'')}</span><span class="tag">VIP</span></div>
-      </div>
-    `).join('');
+    html += docs.map((d,i) => slipCard(d, 'VIP', i)).join('');
   }
   el.innerHTML = html;
 }
