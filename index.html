@@ -6,10 +6,9 @@
 <title>PitchLine — Daily Football Tips</title>
 
 <!-- ============================================================
-  SETUP — edit these three things before publishing:
-  1. FIREBASE_CONFIG below (from your Firebase project settings)
+  SETUP — edit these two things before publishing:
+  1. APPS_SCRIPT_URL below (your Apps Script Web App /exec URL)
   2. FLUTTERWAVE_PUBLIC_KEY below (from your Flutterwave dashboard)
-  3. BRAND name if you want something other than "PitchLine"
   See SETUP-GUIDE.md for full step-by-step instructions.
 ============================================================= -->
 
@@ -32,42 +31,52 @@
     --danger: #d84f4f;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
   body{
     background:
-      radial-gradient(circle at 50% 0%, rgba(255,255,255,0.03), transparent 60%),
+      radial-gradient(circle at 50% -10%, rgba(230,193,78,0.06), transparent 55%),
       repeating-linear-gradient(0deg, var(--pitch-deep) 0 42px, #093126 42px 84px),
       var(--pitch-dark);
+    background-attachment: fixed;
     color:var(--ink);
     font-family:'Inter', sans-serif;
     min-height:100vh;
     padding-bottom:60px;
     animation: bodyFadeIn 0.5s ease both;
+    overflow-x:hidden;
   }
-  @keyframes bodyFadeIn{
-    from{opacity:0;}
-    to{opacity:1;}
-  }
-  @keyframes slipIn{
-    from{opacity:0; transform:translateY(14px);}
-    to{opacity:1; transform:translateY(0);}
-  }
+
+  @keyframes bodyFadeIn{ from{opacity:0;} to{opacity:1;} }
+  @keyframes slipIn{ from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:translateY(0);} }
   @keyframes softPulse{
     0%, 100%{ box-shadow:0 0 0 4px rgba(201,162,39,0.15); }
-    50%{ box-shadow:0 0 0 9px rgba(201,162,39,0.08); }
+    50%{ box-shadow:0 0 0 10px rgba(201,162,39,0.06); }
   }
-  @keyframes ballRoll{
-    from{ transform:rotate(0deg); }
-    to{ transform:rotate(360deg); }
+  @keyframes ballRoll{ from{ transform:rotate(0deg); } to{ transform:rotate(360deg); } }
+  @keyframes drift{
+    0%{ background-position: 0 0; }
+    100%{ background-position: 400px 0; }
   }
-  @keyframes shimmer{
-    0%{ background-position:-120px 0; }
-    100%{ background-position:120px 0; }
+  @keyframes shimmerSweep{
+    0%{ transform:translateX(-120%) skewX(-15deg); }
+    100%{ transform:translateX(220%) skewX(-15deg); }
   }
+  @keyframes floatY{
+    0%, 100%{ transform:translateY(0); }
+    50%{ transform:translateY(-4px); }
+  }
+  @keyframes popIn{
+    0%{ opacity:0; transform:scale(0.85); }
+    60%{ opacity:1; transform:scale(1.04); }
+    100%{ transform:scale(1); }
+  }
+
   h1,h2,h3,.display{font-family:'Teko', sans-serif; letter-spacing:0.02em; font-weight:600;}
   .mono{font-family:'Space Mono', monospace;}
 
+  /* ---------- header ---------- */
   header{
-    padding:28px 20px 20px;
+    padding:30px 20px 22px;
     text-align:center;
     border-bottom:2px dashed rgba(238,242,234,0.15);
     position:relative;
@@ -75,34 +84,23 @@
   }
   header::before{
     content:"";
-    position:absolute; top:-70px; left:50%; transform:translateX(-50%);
-    width:220px; height:220px; border:2px solid rgba(238,242,234,0.06);
+    position:absolute; top:-90px; left:50%; transform:translateX(-50%);
+    width:260px; height:260px; border:2px solid rgba(238,242,234,0.05);
     border-radius:50%;
   }
-  .brand-row{
-    display:flex; align-items:center; justify-content:center; gap:10px;
-    position:relative; z-index:1;
+  header::after{
+    content:"";
+    position:absolute; inset:0;
+    background: repeating-linear-gradient(115deg, rgba(230,193,78,0.03) 0 2px, transparent 2px 26px);
+    background-size:400px 100%;
+    animation: drift 14s linear infinite;
+    pointer-events:none;
   }
-  .ball-icon{
-    width:30px; height:30px; flex:none;
-    animation: ballRoll 6s linear infinite;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-  }
-  header .brand{
-    font-size:44px;
-    line-height:1;
-    color:var(--line-white);
-    text-transform:uppercase;
-    position:relative; z-index:1;
-  }
+  .brand-row{ display:flex; align-items:center; justify-content:center; gap:10px; position:relative; z-index:1; }
+  .ball-icon{ width:30px; height:30px; flex:none; animation: ballRoll 6s linear infinite, floatY 3s ease-in-out infinite; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+  header .brand{ font-size:44px; line-height:1; color:var(--line-white); text-transform:uppercase; position:relative; z-index:1; }
   header .brand span{color:var(--gold-bright);}
-  header .tagline{
-    color:var(--ink-dim);
-    font-size:13px;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    margin-top:4px;
-  }
+  header .tagline{ color:var(--ink-dim); font-size:13px; letter-spacing:0.14em; text-transform:uppercase; margin-top:4px; position:relative; z-index:1; }
 
   main{max-width:520px; margin:0 auto; padding:24px 16px;}
 
@@ -113,7 +111,34 @@
   }
   .section-label::after{content:""; flex:1; height:1px; background:rgba(238,242,234,0.15);}
 
-  /* Betting slip card */
+  /* ---------- ad banner ---------- */
+  .ad-banner{
+    position:relative;
+    display:block;
+    background:linear-gradient(120deg, #17321f, #0f2419);
+    border:1px solid rgba(201,162,39,0.3);
+    border-radius:12px;
+    padding:14px 16px;
+    margin-bottom:14px;
+    text-decoration:none;
+    color:var(--ink);
+    overflow:hidden;
+    animation: slipIn 0.4s ease both;
+    transition: transform 0.15s ease;
+  }
+  .ad-banner:hover{ transform:translateY(-2px); }
+  .ad-banner::before{
+    content:"";
+    position:absolute; top:0; left:0; width:40%; height:100%;
+    background:linear-gradient(90deg, transparent, rgba(230,193,78,0.12), transparent);
+    animation: shimmerSweep 3.5s ease-in-out infinite;
+  }
+  .ad-inner{ display:flex; align-items:center; gap:12px; position:relative; z-index:1; }
+  .ad-inner img{ width:44px; height:44px; border-radius:8px; object-fit:cover; flex:none; background:rgba(255,255,255,0.06); }
+  .ad-text .ad-sponsor{ font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-bright); }
+  .ad-text .ad-message{ font-size:13.5px; color:var(--ink); margin-top:2px; }
+
+  /* ---------- betting slip card ---------- */
   .slip{
     position:relative;
     background:var(--card);
@@ -124,11 +149,10 @@
     overflow:hidden;
     animation: slipIn 0.4s ease both;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
+    opacity:0;
   }
-  .slip:hover{
-    transform:translateY(-2px);
-    box-shadow:0 6px 18px rgba(0,0,0,0.25);
-  }
+  .slip.revealed{ opacity:1; }
+  .slip:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,0,0,0.28); }
   .slip::before{
     content:"";
     position:absolute; left:0; right:0; top:0;
@@ -159,9 +183,10 @@
   .empty{
     text-align:center; color:var(--ink-dim); font-size:13.5px;
     padding:30px 10px; border:1px dashed rgba(238,242,234,0.15); border-radius:10px;
+    animation: slipIn 0.4s ease both;
   }
 
-  /* VIP locked panel */
+  /* ---------- VIP locked panel ---------- */
   .vip-locked{
     position:relative;
     background:linear-gradient(160deg, #17321f, #0b1f16);
@@ -219,7 +244,7 @@
     color:var(--gold-bright);
     text-align:center;
     margin-bottom:14px;
-    animation: slipIn 0.4s ease both;
+    animation: popIn 0.4s ease both;
   }
 
   footer{
@@ -238,7 +263,8 @@
   .toast.error{background:var(--danger); color:#fff;}
 
   @media (prefers-reduced-motion: reduce){
-    *{transition:none !important;}
+    *{animation:none !important; transition:none !important;}
+    .slip{opacity:1;}
   }
 </style>
 </head>
@@ -258,6 +284,8 @@
 
 <main>
 
+  <div id="adArea"></div>
+
   <div class="section-label">Today's free tips</div>
   <div id="freeList"><div class="empty">No free tips posted yet — check back soon.</div></div>
 
@@ -274,12 +302,10 @@
 
 <script>
 /* ================= CONFIG — EDIT THESE ================= */
-// Your Apps Script Web App URL (ends in /exec) — see SETUP-GUIDE.md
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwJ5hojeie_vH1mwABGF871SJ1F1M3tiNSDZHxjIexSucAyeFTEqJ7IvVLrjZRC7vWh4Q/exec";
 const FLUTTERWAVE_PUBLIC_KEY = "FLWPUBK_TEST-09cfb49548d161b75cc479ed14922f1b-X";
 /* ========================================================== */
 
-// Each browser gets a stable anonymous device id, used to track VIP access.
 function getDeviceId(){
   let id = localStorage.getItem('pl_device_id');
   if(!id){
@@ -297,8 +323,10 @@ function showToast(msg, isError){
   setTimeout(()=> t.className = 'toast', 3200);
 }
 
+function escapeHtml(s){
+  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 function fmtOdds(o){ return Number(o).toFixed(2); }
-
 function fmtDate(d){
   if(!d) return '';
   const parts = String(d).split('-');
@@ -306,16 +334,22 @@ function fmtDate(d){
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   return `${parts[2]} ${months[parseInt(parts[1],10)-1]}`;
 }
+function parseLegs(raw){
+  if(!raw) return [];
+  if(Array.isArray(raw)) return raw;
+  try{ return JSON.parse(raw); }catch(e){ return []; }
+}
+
+/* -------- rendering -------- */
 
 function slipCard(d, tagLabel, index){
   const isMulti = d.betType === 'multi';
-  let legs = [];
-  if(isMulti && d.legs){
-    try{ legs = JSON.parse(d.legs); }catch(e){ legs = []; }
-  }
-  const title = isMulti ? `${legs.length}-Fold Accumulator` : escapeHtml(d.match);
+  const legs = isMulti ? parseLegs(d.legs) : [];
+  const title = isMulti ? `${legs.length || '?'}-Fold Accumulator` : escapeHtml(d.match);
   const body = isMulti
-    ? legs.map((l,i) => `<div class="slip-tip">${i+1}. ${escapeHtml(l.match)} — <strong style="color:var(--line-white);">${escapeHtml(l.pick)}</strong></div>`).join('')
+    ? (legs.length
+        ? legs.map((l,i) => `<div class="slip-tip">${i+1}. ${escapeHtml(l.match)} — <strong style="color:var(--line-white);">${escapeHtml(l.pick)}</strong></div>`).join('')
+        : '<div class="slip-tip">Details unavailable</div>')
       + (d.tip ? `<div class="slip-tip" style="margin-top:6px;">${escapeHtml(d.tip)}</div>` : '')
     : `<div class="slip-tip">${escapeHtml(d.tip)}</div>`;
   const delay = Math.min((index||0) * 70, 500);
@@ -339,6 +373,7 @@ function renderFree(docs){
   const el = document.getElementById('freeList');
   if(!docs.length){ el.innerHTML = '<div class="empty">No free tips posted yet — check back soon.</div>'; return; }
   el.innerHTML = docs.map((d,i) => slipCard(d, 'Free', i)).join('');
+  revealOnScroll();
 }
 
 function renderVipLocked(){
@@ -373,6 +408,26 @@ function renderVipUnlocked(docs, expiresAt){
     html += docs.map((d,i) => slipCard(d, 'VIP', i)).join('');
   }
   el.innerHTML = html;
+  revealOnScroll();
+}
+
+function renderAds(ads){
+  const active = ads.filter(a => String(a.active).toUpperCase() === 'TRUE');
+  const el = document.getElementById('adArea');
+  if(!active.length){ el.innerHTML = ''; return; }
+  const a = active[Math.floor(Math.random() * active.length)];
+  const inner = `
+    <div class="ad-inner">
+      ${a.imageUrl ? `<img src="${escapeHtml(a.imageUrl)}" alt="">` : ''}
+      <div class="ad-text">
+        <div class="ad-sponsor">Sponsored · ${escapeHtml(a.sponsor||'')}</div>
+        <div class="ad-message">${escapeHtml(a.message||'')}</div>
+      </div>
+    </div>
+  `;
+  el.innerHTML = a.link
+    ? `<a class="ad-banner" href="${escapeHtml(a.link)}" target="_blank" rel="noopener">${inner}</a>`
+    : `<div class="ad-banner">${inner}</div>`;
 }
 
 function timeLeftStr(expiresAtMs){
@@ -386,11 +441,28 @@ function timeLeftStr(expiresAtMs){
   return hrs + (hrs===1 ? ' hour' : ' hours');
 }
 
-function escapeHtml(s){
-  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* -------- scroll reveal -------- */
+let revealObserver = null;
+function revealOnScroll(){
+  if(!('IntersectionObserver' in window)){
+    document.querySelectorAll('.slip').forEach(el => el.classList.add('revealed'));
+    return;
+  }
+  if(!revealObserver){
+    revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('revealed');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+  }
+  document.querySelectorAll('.slip:not(.revealed)').forEach(el => revealObserver.observe(el));
 }
 
-// Load free tips
+/* -------- data loading -------- */
+
 function loadFreeTips(){
   fetch(`${APPS_SCRIPT_URL}?action=list_predictions&type=free`)
     .then(r => r.json())
@@ -402,7 +474,14 @@ function loadFreeTips(){
 }
 loadFreeTips();
 
-// Check VIP status, then load VIP tips if active
+function loadAds(){
+  fetch(`${APPS_SCRIPT_URL}?action=list_ads`)
+    .then(r => r.json())
+    .then(renderAds)
+    .catch(err => console.error(err));
+}
+loadAds();
+
 function checkVipStatus(){
   fetch(`${APPS_SCRIPT_URL}?action=check_vip&deviceId=${encodeURIComponent(deviceId)}`)
     .then(r => r.json())
